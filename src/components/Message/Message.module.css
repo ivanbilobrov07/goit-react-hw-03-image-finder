@@ -1,0 +1,11 @@
+.MessageContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.TextMessage {
+  display: block;
+  padding: 30px 50px;
+  border: 1px solid #000;
+}
