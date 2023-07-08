@@ -127,36 +127,4 @@ export class ImageGallery extends Component {
       );
     }
   }
-
-  // render() {
-  //   const { status, errorText } = this.state;
-  //   const markup = this.galleryMarkup();
-
-  //   if (status === STATUS.fulfilled) {
-  //     return (
-  //       <>
-  //         {markup}
-  //         {!errorText ? (
-  //           <LoadMoreButton onClick={this.icrementPage} />
-  //         ) : (
-  //           <Message>{errorText}</Message>
-  //         )}
-  //       </>
-  //     );
-  //   } else if (status === STATUS.rejected) {
-  //     return (
-  //       <>
-  //         {markup}
-  //         <Message>{errorText}</Message>
-  //       </>
-  //     );
-  //   } else if (status === STATUS.pending) {
-  //     return (
-  //       <>
-  //         {markup}
-  //         <Loader />
-  //       </>
-  //     );
-  //   }
-  // }
 }
