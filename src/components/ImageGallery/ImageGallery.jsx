@@ -4,9 +4,8 @@ import { fetchImages } from 'services';
 import { Loader } from 'components/Loader';
 import { Message } from 'components/Message';
 import { Modal } from 'components/Modal';
-import { ImageGalleryItem } from 'components/ImageGalleryItem';
+import { ImageGalleryList } from 'components/ImageGalleryList';
 import { LoadMoreButton } from 'components/LoadMoreButton';
-import css from './ImageGallery.module.css';
 
 const STATUS = {
   idle: 'idle',
@@ -66,37 +65,6 @@ export class ImageGallery extends Component {
     }
   }
 
-  galleryMarkup = () => {
-    const { images, largeImageModal } = this.state;
-
-    return (
-      <>
-        {images && (
-          <ul id="gallery" className={css.ImageGallery}>
-            {this.state.images.map(
-              ({ id, webformatURL, largeImageURL, tags }) => (
-                <ImageGalleryItem
-                  onClick={this.showLargeImage}
-                  key={id}
-                  alt={tags}
-                  smallImage={webformatURL}
-                  largeImage={largeImageURL}
-                />
-              )
-            )}
-          </ul>
-        )}
-        {largeImageModal && (
-          <Modal
-            onClose={this.closeModal}
-            url={largeImageModal.url}
-            alt={largeImageModal.alt}
-          />
-        )}
-      </>
-    );
-  };
-
   checkAmountOfImages = images => {
     if (images.length < imagesPerPage) {
       this.setState({ errorText: 'No more images' });
@@ -131,34 +99,64 @@ export class ImageGallery extends Component {
   };
 
   render() {
-    const { status, errorText } = this.state;
-    const markup = this.galleryMarkup();
+    const { status, errorText, images, largeImageModal } = this.state;
 
-    if (status === STATUS.fulfilled) {
+    if (status !== STATUS.idle) {
       return (
         <>
-          {markup}
-          {!errorText ? (
-            <LoadMoreButton onClick={this.icrementPage} />
-          ) : (
-            <Message>{errorText}</Message>
+          <ImageGalleryList
+            images={images}
+            showLargeImage={this.showLargeImage}
+          />
+          {status === STATUS.fulfilled &&
+            (!errorText ? (
+              <LoadMoreButton onClick={this.icrementPage} />
+            ) : (
+              <Message>{errorText}</Message>
+            ))}
+          {status === STATUS.rejected && <Message>{errorText}</Message>}
+          {status === STATUS.pending && <Loader />}
+          {largeImageModal && (
+            <Modal
+              onClose={this.closeModal}
+              url={largeImageModal.url}
+              alt={largeImageModal.alt}
+            />
           )}
-        </>
-      );
-    } else if (status === STATUS.rejected) {
-      return (
-        <>
-          {markup}
-          <Message>{errorText}</Message>
-        </>
-      );
-    } else if (status === STATUS.pending) {
-      return (
-        <>
-          {markup}
-          <Loader />
         </>
       );
     }
   }
+
+  // render() {
+  //   const { status, errorText } = this.state;
+  //   const markup = this.galleryMarkup();
+
+  //   if (status === STATUS.fulfilled) {
+  //     return (
+  //       <>
+  //         {markup}
+  //         {!errorText ? (
+  //           <LoadMoreButton onClick={this.icrementPage} />
+  //         ) : (
+  //           <Message>{errorText}</Message>
+  //         )}
+  //       </>
+  //     );
+  //   } else if (status === STATUS.rejected) {
+  //     return (
+  //       <>
+  //         {markup}
+  //         <Message>{errorText}</Message>
+  //       </>
+  //     );
+  //   } else if (status === STATUS.pending) {
+  //     return (
+  //       <>
+  //         {markup}
+  //         <Loader />
+  //       </>
+  //     );
+  //   }
+  // }
 }
