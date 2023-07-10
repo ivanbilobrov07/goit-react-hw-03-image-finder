@@ -3,7 +3,6 @@ import { Component } from 'react';
 import { fetchImages } from 'services';
 import { Loader } from 'components/Loader';
 import { Message } from 'components/Message';
-import { Modal } from 'components/Modal';
 import { ImageGalleryList } from 'components/ImageGalleryList';
 import { LoadMoreButton } from 'components/LoadMoreButton';
 
@@ -22,7 +21,6 @@ export class ImageGallery extends Component {
     page: 1,
     status: STATUS.idle,
     errorText: '',
-    largeImageModal: null,
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -90,24 +88,13 @@ export class ImageGallery extends Component {
     });
   };
 
-  showLargeImage = (largeUrl, alt) => {
-    this.setState({ largeImageModal: { url: largeUrl, alt } });
-  };
-
-  closeModal = () => {
-    this.setState({ largeImageModal: null });
-  };
-
   render() {
     const { status, errorText, images, largeImageModal } = this.state;
 
     if (status !== STATUS.idle) {
       return (
         <>
-          <ImageGalleryList
-            images={images}
-            showLargeImage={this.showLargeImage}
-          />
+          <ImageGalleryList images={images} />
           {status === STATUS.fulfilled &&
             (!errorText ? (
               <LoadMoreButton onClick={this.icrementPage} />
@@ -116,13 +103,6 @@ export class ImageGallery extends Component {
             ))}
           {status === STATUS.rejected && <Message>{errorText}</Message>}
           {status === STATUS.pending && <Loader />}
-          {largeImageModal && (
-            <Modal
-              onClose={this.closeModal}
-              url={largeImageModal.url}
-              alt={largeImageModal.alt}
-            />
-          )}
         </>
       );
     }
