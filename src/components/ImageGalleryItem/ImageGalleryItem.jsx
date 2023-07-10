@@ -1,4 +1,5 @@
 import { Component } from 'react';
+
 import { Modal } from 'components/Modal';
 import css from './ImageGalleryItem.module.css';
 
